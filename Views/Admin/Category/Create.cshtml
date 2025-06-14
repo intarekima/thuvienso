@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Trang Tạo Mới Danh Mục";
+    Layout = "~/Views/Shared/Admin/_Layout.cshtml";
+}
+
+@await Html.PartialAsync("~/Views/Shared/Admin/_Notification.cshtml")
+
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Tạo Mới Danh Mục</h3></div>
+        </div>
+    </div>
+</div>
+<div class="app-content">
+    <div class="container-fluid">
+        <form method="post" class="row">
+            <div class="col-12">
+                <div class="card card-primary">
+                    <div class="card-body">
+                        <div class="form-group mt-3">
+                            <label for="name">Tên danh mục</label>
+                            <input type="text" id="name" name="name" class="form-control"
+                                   required maxlength="255" pattern=".*[A-Za-zÀ-ỹ].*"
+                                   placeholder="Tên không được chứa toàn số hoặc để trống." />
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="parentId">Danh mục cha</label>
+                            <select id="parentId" name="parentId" class="form-control select2">
+                                <option value=""></option>
+                                @foreach (var item in (IEnumerable<SelectListItem>)ViewBag.ParentCategories)
+                                {
+                                    var selected = item.Selected ? true : false;
+                                    <option value="@item.Value" selected="@selected">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="description">Mô tả</label>
+                            <textarea id="description" name="description" class="form-control" maxlength="1000"
+                                      placeholder="Nhập mô tả danh mục (tuỳ chọn)">@ViewData["Description"]</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 mt-3 text-end">
+                <a href="/admin/category" class="btn btn-secondary">Huỷ</a>
+                <input type="submit" value="Lưu" class="btn btn-success">
+            </div>
+        </form>
+    </div>
+</div>

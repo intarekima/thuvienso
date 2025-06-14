@@ -1,0 +1,158 @@
+﻿@{
+    ViewData["Title"] = "Trang liên hệ";
+    Layout = "~/Views/Shared/User/_Layout.cshtml";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger container text-center">@TempData["Error"]</div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success container text-center">@TempData["Success"]</div>
+}
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Breadcrumb -->
+                <ul class="breadcrumbs bg-light mb-4">
+                    <li class="breadcrumbs__item">
+                        <a class="breadcrumbs__url" href="/">
+                            <i class="fa fa-home"></i> Trang chủ
+                        </a>
+                    </li>
+                    <li class="breadcrumbs__item breadcrumbs__item--current">
+                        Liên hệ
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="wrap__contact-form">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <h5>Liên hệ</h5>
+                <form method="post" action="/contact" class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-group-name">
+                            <label>Họ và tên <span class="required">*</span></label>
+                            <input type="text" class="form-control" name="name"
+                                   required maxlength="100"
+                                   pattern=".*[A-Za-zÀ-ỹ].*">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group form-group-name">
+                            <label>Email <span class="required">*</span></label>
+                            <input type="email" class="form-control" name="email"
+                                   required maxlength="100">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group form-group-name">
+                            <label>SĐT <span class="required">*</span></label>
+                            <input type="text" class="form-control" name="phone"
+                                   required maxlength="12" pattern="^0[0-9]{9}$">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group form-group-name">
+                            <label>Tiêu đề <span class="required">*</span></label>
+                            <input type="text" class="form-control" name="subject"
+                                   required maxlength="200"
+                                   pattern=".*[A-Za-zÀ-ỹ].*">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Nội dung liên hệ <span class="required">*</span></label>
+                            <textarea class="form-control" rows="8" name="message"
+                                      required maxlength="2000"
+                                      pattern=".*[A-Za-zÀ-ỹ].*"></textarea>
+                        </div>
+                        <div class="form-group float-right mb-4">
+                            <button type="submit" class="btn btn-primary">Gửi</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+
+            <div class="col-md-4">
+                <h5>Thông tin</h5>
+                <div class="wrap__contact-form-office">
+                    <ul class="list-unstyled">
+                        <li>
+                            <span>
+                                <i class="fa fa-home"></i>
+                            </span>
+
+                            180 Cao Lỗ Quận 8 TPHCM
+
+
+                        </li>
+                        <li>
+                            <span>
+                                <i class="fa fa-phone"></i>
+                                <a href="tel:080200000">080200000</a>
+                            </span>
+
+                        </li>
+                        <li>
+                            <span>
+                                <i class="fa fa-envelope"></i>
+                                <a href="mailto:intarekima@gmail.com">intarekima@gmail.com</a>
+                            </span>
+
+                        </li>
+                        <li>
+                            <span>
+                                <i class="fa fa-globe"></i>
+                                <a href="https://www.facebook.com/nomodo2304?locale=VI" target="_blank"> www.thuvienso.com</a>
+                            </span>
+                        </li>
+                    </ul>
+
+                    <div class="social__media mt-5">
+                        <h5>Theo dõi</h5>
+                        <ul class="list-inline">
+
+                            <li class="list-inline-item">
+                                <a href="https://www.facebook.com/nomodo2304?locale=VI" class="btn btn-social rounded text-white facebook">
+                                    <i class="fa fa-facebook"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="https://www.facebook.com/nomodo2304?locale=VI" class="btn btn-social rounded text-white twitter">
+                                    <i class="fa fa-twitter"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="https://www.facebook.com/nomodo2304?locale=VI" class="btn btn-social rounded text-white whatsapp">
+                                    <i class="fa fa-whatsapp"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="https://www.facebook.com/nomodo2304?locale=VI" class="btn btn-social rounded text-white telegram">
+                                    <i class="fa fa-telegram"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="https://www.facebook.com/nomodo2304?locale=VI" class="btn btn-social rounded text-white linkedin">
+                                    <i class="fa fa-linkedin"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

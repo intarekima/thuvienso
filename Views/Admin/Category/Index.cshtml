@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Trang Danh Mục";
+    Layout = "~/Views/Shared/Admin/_Layout.cshtml";
+}
+@await Html.PartialAsync("~/Views/Shared/Admin/_Notification.cshtml")
+
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Danh Sách Danh Mục</h3></div>
+        </div>
+    </div>
+</div>
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <a href="/admin/category/create" class="card-title btn btn-primary text-white">
+                            <i class="bi bi-plus-lg"></i>
+                            Tạo mới
+                        </a>
+
+                        <form method="get" class="card-search">
+                            <div class="input-group input-group-sm">
+                                <input type="text" name="search" class="form-control" placeholder="Tìm kiếm..." value="@Context.Request.Query["search"]" />
+
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tên danh mục</th>
+                                    <th>Mô tả</th>
+                                    <th>Danh mục cha</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @model List<thuvienso.Helpers.CategoryHelper.CategoryTreeItem>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.Category.Id</td>
+                                        <td>
+                                            @if (item.Matched)
+                                            {
+                                                <span class="px-2 bg-success text-white">
+                                                    @(new string('—', item.Level * 1))
+                                                    @item.Category.Name
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                @(new string('—', item.Level * 1))
+                                                @item.Category.Name
+                                            }
+                                        </td>
+                                        <td>@(item.Category.Description ?? "—")</td>
+                                        <td>@(item.Category.Parent?.Name ?? "—")</td>
+                                        <td>
+                                            <a href="/admin/category/edit/@item.Category.Id" class="btn btn-warning btn-sm">Chỉnh sửa</a>
+                                            <a href="/admin/category/delete/@item.Category.Id" class="btn btn-danger btn-sm"
+                                               onclick="return confirm('Bạn có chắc muốn xoá danh mục này không?');">Xoá</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

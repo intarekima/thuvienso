@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Trang cá nhân";
+    Layout = "~/Views/Shared/User/_Layout.cshtml";
+}
+
+<div class="container my-5 profiles">
+    <ul class="nav nav-tabs border-0" id="documentTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active font-weight-bold" id="purchased-tab" data-toggle="tab" href="#purchased" role="tab"
+               aria-controls="purchased" aria-selected="true" style="color: var(--primary);">
+                Tài liệu đã mua
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link font-weight-bold" id="viewed-tab" data-toggle="tab" href="#viewed" role="tab"
+               aria-controls="viewed" aria-selected="false" style="color: var(--primary);">
+                Tài liệu đã xem
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content border p-4 shadow-sm" id="documentTabsContent">
+        <!-- Tab 1: Đã mua -->
+        <div class="tab-pane fade show active" id="purchased" role="tabpanel" aria-labelledby="purchased-tab">
+            ĐANG PHÁT TRIỂN
+        </div>
+
+        <!-- Tab 2: Đã xem -->
+        <div class="tab-pane fade" id="viewed" role="tabpanel" aria-labelledby="viewed-tab">
+            ĐANG PHÁT TRIỂN
+        </div>
+    </div>
+</div>
+
+<style>
+    .profiles .nav-tabs .nav-link.active {
+        border-bottom: 3px solid var(--primary);
+        background-color: #fff;
+    }
+
+    .profiles .nav-tabs .nav-link:hover {
+        text-decoration: underline;
+    }
+</style>

@@ -1,0 +1,568 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+    Layout = "~/Views/Shared/User/_Layout.cshtml";
+}
+
+@* Tài liệu ngẫu nhiên *@
+<section class="bg-light">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="wrapp__list__article-responsive wrapp__list__article-responsive-carousel">
+
+					@foreach (var doc in ViewBag.Random as List<thuvienso.Models.Document>)
+					{
+						<div class="item">
+							<!-- Post Article -->
+							<div class="card__post card__post-list">
+								<div class="image-sm">
+									<a href="/document/@doc.Id">
+										<img src="@(!string.IsNullOrEmpty(doc.Thumb) ? doc.Thumb : "/user/images/thumb/default.jpg")"
+											 class="img-fluid" alt="@doc.Title" />
+									</a>
+								</div>
+
+								<div class="card__post__body">
+									<div class="card__post__content">
+
+										<div class="card__post__author-info mb-2">
+											<ul class="list-inline">
+												<li class="list-inline-item">
+													<span class="text-primary">
+														@((doc.DocumentAuthors.Any()
+														? string.Join(", ", doc.DocumentAuthors.Select(x => x.Author?.Name ?? "Không rõ"))
+														: "Không rõ"))
+													</span>
+												</li>
+												<li class="list-inline-item">
+													<span class="text-dark text-capitalize">
+														@doc.CreatedAt.ToString("dd/MM/yyyy")
+													</span>
+												</li>
+											</ul>
+										</div>
+
+										<div class="card__post__title">
+											<h6>
+												<a href="/document/@doc.Id">
+													@doc.Title
+												</a>
+											</h6>
+											<div class="tag__">
+												@(doc.IsFree ? "Miễn phí" : "Có phí")
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					}
+
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+@* Tài liệu mới *@
+<section>
+	<div class="popular__news-header-carousel mt-0">
+		<div class="container">
+			<div class="wrapper__list__article">
+				<h4 class="border_section">Tài liệu mới</h4>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="top__news__slider">
+						@foreach (var doc in ViewBag.Newest as List<thuvienso.Models.Document>)
+						{
+							<div class="item">
+								<!-- Post Article -->
+								<div class="article__entry">
+									<div class="article__image">
+										<a href="/document/@doc.Id">
+											<img src="@(!string.IsNullOrEmpty(doc.Thumb) ? doc.Thumb : "/user/images/medium/default.png")"
+												 alt="@doc.Title"
+												 class="img-fluid" />
+										</a>
+									</div>
+
+									<div class="article__content">
+										<ul class="list-inline">
+											<li class="list-inline-item">
+												<span class="text-primary">
+													 @(string.Join(", ", doc.DocumentAuthors.Select(x => x.Author.Name)))
+												</span>,
+											</li>
+											<li class="list-inline-item">
+												<span>
+													@doc.CreatedAt.ToString("dd/MM/yyyy")
+												</span>
+											</li>
+										</ul>
+										<h5>
+											<a href="/document/@doc.Id">
+												@doc.Title
+											</a>
+										</h5>
+										<div class="tag__">
+											@(doc.IsFree ? "Miễn phí" : "Có phí")
+										</div>
+									</div>
+								</div>
+							</div>
+						}
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Popular news carousel -->
+</section>
+
+
+@* Tài liệu có phí *@
+@{
+	var paidDocs = ViewBag.Paid as List<thuvienso.Models.Document>;
+}
+@if (paidDocs != null && paidDocs.Any())
+{
+	<section>
+		<div class="popular__news-header-carousel mt-0">
+			<div class="container">
+				<div class="wrapper__list__article">
+					<h4 class="border_section">Tài liệu trả phí</h4>
+				</div>
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="top__news__slider">
+							@foreach (var doc in paidDocs)
+							{
+								<div class="item">
+									<!-- Post Article -->
+									<div class="article__entry">
+										<div class="article__image">
+											<a href="/document/@doc.Id">
+												<img src="@(!string.IsNullOrEmpty(doc.Thumb) ? doc.Thumb : "/user/images/medium/default.png")"
+													 alt="@doc.Title"
+													 class="img-fluid" />
+											</a>
+										</div>
+
+										<div class="article__content">
+											<ul class="list-inline">
+												<li class="list-inline-item">
+													<span class="text-primary">
+														 @(string.Join(", ", doc.DocumentAuthors.Select(x => x.Author.Name)))
+													</span>,
+												</li>
+												<li class="list-inline-item">
+													<span>
+														@doc.CreatedAt.ToString("dd/MM/yyyy")
+													</span>
+												</li>
+											</ul>
+											<h5>
+												<a href="/document/@doc.Id">
+													@doc.Title
+												</a>
+											</h5>
+											<div class="tag__">
+												@(doc.IsFree ? "Miễn phí" : "Có phí")
+											</div>
+										</div>
+									</div>
+								</div>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+}
+
+
+
+@* Tài liệu miễn phí và Tài liệu xem nhiều nhất *@
+<section class="pt-0">
+	<div class="popular__section-news">
+		<div class="container">
+			<div class="row">
+
+				@* Tài liệu miễn phí *@
+				<div class="col-md-12 col-lg-8">
+					<div class="wrapper__list__article">
+						<h4 class="border_section">Tài liệu miễn phí</h4>
+					</div>
+					<div class="row ">
+						@foreach (var doc in ViewBag.Free as List<thuvienso.Models.Document>)
+						{
+							<div class="item col-6 mb-3">
+								<!-- Post Article -->
+								<div class="card__post card__post-list">
+									<div class="image-sm">
+										<a href="/document/@doc.Id">
+											<img src="@(!string.IsNullOrEmpty(doc.Thumb) ? doc.Thumb : "/user/images/news1.jpg")"
+												 class="img-fluid" alt="@doc.Title" />
+										</a>
+									</div>
+
+									<div class="card__post__body">
+										<div class="card__post__content">
+
+											<div class="card__post__author-info mb-2">
+												<ul class="list-inline">
+													<li class="list-inline-item">
+														<span class="text-primary">
+															 @(string.Join(", ", doc.DocumentAuthors.Select(x => x.Author.Name)))
+														</span>
+													</li>
+													<li class="list-inline-item">
+														<span class="text-dark text-capitalize">
+															@doc.CreatedAt.ToString("dd/MM/yyyy")
+														</span>
+													</li>
+												</ul>
+											</div>
+
+											<div class="card__post__title">
+												<h6>
+													<a href="/document/@doc.Id">
+														@doc.Title
+													</a>
+												</h6>
+												<div class="tag__">
+													@(doc.IsFree ? "Miễn phí" : "Có phí")
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+
+				@* Tài liệu xem nhiều nhất *@
+				<div class="col-md-12 col-lg-4">
+					<aside class="wrapper__list__article">
+						<h4 class="border_section">Tài liệu nổi bật</h4>
+						<div class="wrapper__list-number">
+
+							@{
+								var items = ViewBag.MostViewed as List<thuvienso.Models.Document>;
+								var index = 1;
+							}
+
+							@foreach (var doc in items)
+							{
+								<div class="card__post__list">
+									<div class="list-number">
+										<span>@index</span>
+									</div>
+
+									<a href="#" class="category">
+										@(doc.Category?.Name ?? "Không rõ")
+									</a>
+
+									<ul class="list-inline">
+										<li class="list-inline-item">
+											<h5>
+												<a href="/document/@doc.Id">
+													@doc.Title
+												</a>
+											</h5>
+											<div class="tag__">
+												@(doc.IsFree ? "Miễn phí" : "Có phí")
+											</div>
+										</li>
+									</ul>
+								</div>
+
+								index++;
+							}
+
+
+						</div>
+					</aside>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	@* TOP 1 danh mục có tài liệu nhiều view *@
+	@{
+		var cat1 = ViewBag.CategoryTop1View as thuvienso.Models.Category;
+	}
+
+	@if (cat1 != null)
+	{
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<aside class="wrapper__list__article">
+						<h4 class="border_section">@cat1.Name</h4>
+					</aside>
+				</div>
+				<div class="col-md-12">
+					<div class="article__entry-carousel">
+						@foreach (var doc in cat1.Documents)
+						{
+							<div class="item">
+								<!-- Post Article -->
+								<div class="article__entry">
+									<div class="article__image">
+										<a href="/document/@doc.Id">
+											<img src="@(!string.IsNullOrEmpty(doc.Thumb) ? doc.Thumb : "/user/images/medium/default.png")"
+												 alt="@doc.Title" class="img-fluid" />
+										</a>
+									</div>
+									<div class="article__content">
+										<ul class="list-inline">
+											<li class="list-inline-item">
+												<span class="text-primary">
+													@(string.Join(", ", doc.DocumentAuthors.Select(x => x.Author.Name)))
+												</span>
+											</li>
+											<li class="list-inline-item">
+												<span>
+													@doc.CreatedAt.ToString("dd/MM/yyyy")
+												</span>
+											</li>
+										</ul>
+										<h5>
+											<a href="/document/@doc.Id">
+												@doc.Title
+											</a>
+										</h5>
+										<div class="tag__">
+											@(doc.IsFree ? "Miễn phí" : "Có phí")
+										</div>
+									</div>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+
+
+	@* TOP 2 và TOP 3 danh mục có tài liệu nhiều view *@
+	<div class="mt-4">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8">
+
+					@* TOP 2 *@
+					@{
+						var cat2 = ViewBag.CategoryTop2View as thuvienso.Models.Category;
+					}
+
+					@if (cat2 != null)
+					{
+						<aside class="wrapper__list__article mb-0">
+							<h4 class="border_section">@cat2.Name</h4>
+							<div class="row">
+								<div class="col-12 row">
+									@foreach (var doc in cat2.Documents)
+									{
+										<div class="col-md-4 mb-4">
+											<!-- Post Article -->
+											<div class="article__entry">
+												<div class="article__image">
+													<a href="/document/@doc.Id">
+														<img src="@(!string.IsNullOrEmpty(doc.Thumb) ? doc.Thumb : "/user/images/newsimage10.jpg")"
+															 alt="@doc.Title" class="img-fluid">
+													</a>
+												</div>
+												<div class="article__content">
+													<ul class="list-inline">
+														<li class="list-inline-item">
+															<span class="text-primary">
+																@(string.Join(", ", doc.DocumentAuthors.Select(x => x.Author.Name)))
+															</span>
+														</li>
+														<li class="list-inline-item">
+															<span>
+																@doc.CreatedAt.ToString("dd/MM/yyyy")
+															</span>
+														</li>
+													</ul>
+													<h5>
+														<a href="/document/@doc.Id">
+															@doc.Title
+														</a>
+													</h5>
+													<div class="tag__">
+														@(doc.IsFree ? "Miễn phí" : "Có phí")
+													</div>
+												</div>
+											</div>
+										</div>
+									}
+								</div>
+							</div>
+						</aside>
+					}
+
+					@* TOP 3 *@
+					@{
+						var cat3 = ViewBag.CategoryTop3View as thuvienso.Models.Category;
+					}
+					@if (cat3 != null)
+					{
+						<aside class="wrapper__list__article">
+							<h4 class="border_section">@cat3.Name</h4>
+
+							<div class="wrapp__list__article-responsive">
+								@foreach (var doc in cat3.Documents)
+								{
+									<div class="card__post card__post-list card__post__transition mt-30">
+										<div class="row">
+											<div class="col-md-5">
+												<div class="card__post__transition">
+													<a href="/document/@doc.Id">
+														<img src="@(!string.IsNullOrEmpty(doc.Thumb) ? doc.Thumb : "/user/images/newsimage-default.jpg")"
+															 class="img-fluid w-100" alt="@doc.Title">
+													</a>
+												</div>
+											</div>
+											<div class="col-md-7 my-auto pl-0">
+												<div class="card__post__body">
+													<div class="card__post__content">
+														<div class="card__post__category">
+															@(doc.Category?.Name ?? "Chưa rõ")
+														</div>
+														<div class="card__post__author-info mb-2">
+															<ul class="list-inline">
+																<li class="list-inline-item">
+																	<span class="text-primary">
+																		@(string.Join(", ", doc.DocumentAuthors.Select(x => x.Author.Name)))
+																	</span>
+																</li>
+																<li class="list-inline-item">
+																	<span class="text-dark text-capitalize">
+																		@doc.CreatedAt.ToString("dd/MM/yyyy")
+																	</span>
+																</li>
+															</ul>
+														</div>
+														<div class="card__post__title">
+															<h5>
+																<a href="/document/@doc.Id">
+																	@doc.Title
+																</a>
+															</h5>
+															<div class="tag__">
+																@(doc.IsFree ? "Miễn phí" : "Có phí")
+															</div>
+															@if (!string.IsNullOrWhiteSpace(doc.Description))
+															{
+																<p class="d-none d-lg-block d-xl-block mb-0">
+																	@(doc.Description.Length > 140 ? doc.Description.Substring(0, 140) + "..." : doc.Description)
+																</p>
+															}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								}
+							</div>
+						</aside>
+					}
+
+				</div>
+
+				<div class="col-md-4">
+					<div class="sidebar-sticky">
+						<aside class="wrapper__list__article">
+							<h4 class="border_section">Theo dõi chúng tôi</h4>
+							<!-- widget Social media -->
+							<div class="wrap__social__media">
+								<a href="https://www.facebook.com/nomodo2304?locale=VI" target="_blank">
+									<div class="social__media__widget facebook">
+										<span class="social__media__widget-icon">
+											<i class="fa fa-facebook"></i>
+										</span>
+										<span class="social__media__widget-name">
+											like
+										</span>
+									</div>
+								</a>
+								<a href="https://www.facebook.com/nomodo2304?locale=VI" target="_blank">
+									<div class="social__media__widget twitter">
+										<span class="social__media__widget-icon">
+											<i class="fa fa-twitter"></i>
+										</span>
+										<span class="social__media__widget-name">
+											follow
+										</span>
+									</div>
+								</a>
+								<a href="https://www.facebook.com/nomodo2304?locale=VI" target="_blank">
+									<div class="social__media__widget youtube">
+										<span class="social__media__widget-icon">
+											<i class="fa fa-youtube"></i>
+										</span>
+										<span class="social__media__widget-name">
+											subscribe
+										</span>
+									</div>
+								</a>
+
+							</div>
+						</aside>
+						<!-- end social media -->
+						<!-- tags -->
+						<aside class="wrapper__list__article">
+							<h4 class="border_section">Danh mục</h4>
+							<div class="blog-tags p-0">
+								<ul class="list-inline">
+									@{
+										var flatCategories = ViewBag.FlatCategories as List<thuvienso.Helpers.CategoryHelper.CategoryTreeItem>;
+									}
+
+									@if (flatCategories != null)
+									{
+										foreach (var item in flatCategories)
+										{
+											<li class="list-inline-item">
+												<a href="?categoryId=@item.Category.Id">#@item.Category.Name</a>
+											</li>
+										}
+									}
+
+								</ul>
+							</div>
+						</aside>
+						<!-- end tags -->
+						<!-- newsletter -->
+						<aside class="wrapper__list__article">
+							<h4 class="border_section">Đăng ký nhận tin mới</h4>
+							<!-- Form Subscribe -->
+							<div class="widget__form-subscribe bg__card-shadow">
+								<div class="input-group ">
+									<input type="text" class="form-control" placeholder="Email">
+									<div class="input-group-append">
+										<button class="btn btn-primary" type="button">Gửi</button>
+									</div>
+								</div>
+							</div>
+						</aside>
+						<!-- end newsletter -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

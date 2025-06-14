@@ -1,0 +1,574 @@
+﻿@model thuvienso.Models.Document
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = "~/Views/Shared/User/_Layout.cshtml";
+
+    var newest = (List<thuvienso.Models.Document>)ViewBag.NewestDocs;
+    var popular = (List<thuvienso.Models.Document>)ViewBag.PopularDocs;
+    string fallbackThumb = "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/2b/d8/9e/2bd89e9f-aaf3-725a-bd45-ae6ecdee2f54/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg";
+}
+
+<section class="bg-white pb-60">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Breadcrumb -->
+                <ul class="breadcrumbs bg-light mb-4">
+                    <li class="breadcrumbs__item">
+                        <a class="breadcrumbs__url" href="index.html">
+                            <i class="fa fa-home"></i> Trang chủ
+                        </a>
+                    </li>
+                    <li class="breadcrumbs__item breadcrumbs__item--current">
+                        @Model.Category.Name
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <!-- Article detail -->
+                <div class="wrap__article-detail">
+                    <div class="wrap__article-detail-image">
+                        <!-- Social media animation -->
+                        <div class="social__media__animation">
+                            <ul class="menu topLeft bg__card-shadow">
+                                <li class="share bottom">
+                                    <i class="fa fa-share-alt btn-toast"
+                                        data-noti="Đã copy đường dẫn xem tài liệu"
+                                        data-copy="@($"{Context.Request.Scheme}://{Context.Request.Host}/document/{Model.Id}")"
+                                        data-type="success"></i>
+                                </li>
+                                @if (Model.IsFree)
+                                {
+                                <li class="share bottom">
+                                    <i class="fa fa-download btn-toast"
+                                    data-download="/document/download/@Model.Id"
+                                    data-noti="Đang tải xuống tài liệu"
+                                    data-type="success"></i>
+                                </li>
+                                }
+                                <li class="share bottom">
+                                    <i class="fa fa-cart-arrow-down btn-checkout" style="cursor: pointer;" title="Thanh toán"></i>
+                                </li>
+                            </ul>
+                        </div>
+                        <figure>
+                            @if (Model.IsFree == true)
+                            {
+                                <iframe id="pdf-viewer"
+                                        src="/pdfjs/web/viewer.html?file=@Model.FileUrl"
+                                        width="100%" height="600px" style="border:none;"></iframe>
+                            }
+                            else
+                            {
+                                <iframe id="pdf-viewer"
+                                        src="/pdfjs/web/viewer.html?file=@Model.PreviewFileUrl"
+                                        width="100%" height="600px" style="border:none;"></iframe>
+
+                                <div class="alert alert-warning mt-3">
+                                    <strong>Bạn đang xem bản xem trước (3 trang đầu tiên).</strong><br />
+                                    Vui lòng thanh toán để xem đầy đủ tài liệu.
+                                </div>
+                            }
+                        </figure>
+                    </div>
+
+                    <div class="wrap__article-detail-title">
+                        <h1>
+                            @Model.Title
+                        </h1>
+
+                    </div>
+                    <hr>
+                    <div class="wrap__article-detail-info">
+                        <ul class="list-inline">
+                            <!-- Ngày tạo -->
+                            <li class="list-inline-item">
+                                <span class="text-dark text-capitalize ml-1">
+                                    @Model.CreatedAt.ToString("dd MMMM yyyy"),  @* ví dụ: 13 June 2025 *@
+                                </span>
+                            </li>
+
+                            <!-- Danh mục -->
+                            <li class="list-inline-item">
+                                <a href="/category?categoryId=@Model.Category?.Id">
+                                    @Model.Category?.Name,
+                                </a>
+                            </li>
+
+                            <!-- Lượt xem -->
+                            <li class="list-inline-item">
+                                <span class="mr-1 ml-1">
+                                    <i class="fa fa-eye"></i> @(Model.View ?? 0)
+                                </span>
+                            </li>
+
+                            <!-- Lượt tải -->
+                            <li class="list-inline-item">
+                                <span class="mr-1 ml-1">
+                                    <i class="fa fa-download"></i> @(Model.Download ?? 0)
+                                </span>
+                            </li>
+
+
+
+
+                            @if (Model.IsFree == false)
+                            {
+                                <li class="list-inline-item tag__">
+                                    <span class="mr-1 ml-1">
+                                        <i class="fa fa-money"></i> @string.Format("{0:N0}₫", Model.Price ?? 0)
+                                    </span>
+                                </li>
+
+                                <li class="list-inline-item tag__ cursor-pointer">
+                                    <span class="mr-1 ml-1 btn-checkout">
+                                        Thanh toán ngay hoặc từng phần
+                                    </span>
+                                </li>
+                            }
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <hr>
+                    <div class="wrap__article-detail-content">
+                        <p class="has-drop-cap-fluid">
+                            @Model.Description
+                        </p>
+                    </div>
+
+                    <hr>
+                    <div class="wrap__article-detail-info">
+                        <div class="row">
+                            <div class="col-12 col-md-6 mb-4">
+                                <figure class="text-center">
+                                    <img src="@($"{Context.Request.Scheme}://{Context.Request.Host}/documents/document-{Model.Id}/qr-view.png")"
+                                         alt="QR Xem tài liệu" class="img-fluid" style="max-width: 200px;" />
+                                    <figcaption class="mt-2 font-weight-bold">QR Xem tài liệu</figcaption>
+                                </figure>
+                            </div>
+                            <div class="col-12 col-md-6 mb-4">
+                                <figure class="text-center">
+                                    <img src="@($"{Context.Request.Scheme}://{Context.Request.Host}/documents/document-{Model.Id}/qr-download.png")"
+                                         alt="QR Tải tài liệu" class="img-fluid" style="max-width: 200px;" />
+                                    <figcaption class="mt-2 font-weight-bold">QR Tải tài liệu</figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Author Tags (hiển thị có phí / miễn phí) -->
+                <div class="blog-tags d-block">
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <i class="fa fa-tag"></i> <!-- icon giá -->
+                        </li>
+                        <li class="list-inline-item">
+                            <a class="tag__ text-white">
+                                @(Model.IsFree ? "Miễn phí" : "Có phí")
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <!-- Author Tags -->
+                <div class="blog-tags d-block">
+                    @{
+                        var authors = Model.DocumentAuthors
+                        .Where(x => x.Author != null)
+                        .Select(x => x.Author)
+                        .ToList();
+                    }
+
+                    @if (authors.Any())
+                    {
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+                                <i class="fa fa-user"></i> <!-- icon tác giả -->
+                            </li>
+                            @foreach (var author in authors)
+                            {
+                                <li class="list-inline-item">
+                                    <a class="bg-primary text-white" href="/author/@author.Id">
+                                        #@author.Name
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+
+
+                <!-- Category Tags -->
+                <div class="blog-tags">
+                    @{
+                        var allCategories = ViewBag.AllCategories as List<thuvienso.Models.Category>;
+                    }
+
+                    @if (allCategories != null && allCategories.Any())
+                    {
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+                                <i class="fa fa-tags"></i>
+                            </li>
+                            @foreach (var category in allCategories)
+                            {
+                                var isCurrent = category.Id == Model.CategoryId;
+                                var cssClass = isCurrent ? "bg-primary text-white px-2" : "";
+                                <li class="list-inline-item">
+                                    <a href="/category?categoryId=@category.Id" class="@cssClass">
+                                        #@category.Name
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+
+                </div>
+
+
+                <!-- Profile author -->
+                <!-- Comment  -->
+                <!-- Comment -->
+
+
+
+
+
+            </div>
+            <div class="col-md-4">
+                <aside class="wrapper__list__article">
+                    <div class="wrapper__list__article-small">
+                        <!-- Post Article -->
+
+                        <div class="wrapper__list__article-small">
+
+                            @{
+                                var popularDocs = ViewBag.PopularDocs as List<thuvienso.Models.Document>;
+                            }
+
+                            @if (popularDocs != null)
+                            {
+                                foreach (var doc in popularDocs)
+                                {
+                                    <div class="item mb-3">
+                                        <!-- Post Article -->
+                                        <div class="card__post card__post-list">
+                                            <div class="image-sm">
+                                                <a href="/document/@doc.Id">
+                                                    <img src="@(!string.IsNullOrEmpty(doc.Thumb) ? doc.Thumb : "/images/thumb/default.jpg")" class="img-fluid" alt="@doc.Title" />
+                                                </a>
+                                            </div>
+
+                                            <div class="card__post__body">
+                                                <div class="card__post__content">
+                                                    <div class="card__post__author-info mb-2">
+                                                        <ul class="list-inline">
+                                                            <li class="list-inline-item">
+                                                                <span class="text-primary">
+                                                                    @(string.Join(", ", doc.DocumentAuthors.Select(x => x.Author.Name)))
+                                                                </span>
+                                                            </li>
+                                                            <li class="list-inline-item">
+                                                                <span class="text-dark text-capitalize">
+                                                                    @doc.CreatedAt.ToString("dd/MM/yyyy")
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div class="card__post__title">
+                                                        <h6>
+                                                            <a href="/document/@doc.Id">
+                                                                @doc.Title
+                                                            </a>
+                                                        </h6>
+                                                        <div class="tag__">
+                                                            @(doc.IsFree ? "Miễn phí" : "Có phí")
+                                                        </div>
+                                                        @* <p class="d-none d-lg-block d-xl-block">@doc.Description</p> *@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            </div>
+
+
+                            <!-- Post Article -->
+
+
+
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- social media -->
+                <!-- End social media -->
+                <!-- Newsletter news -->
+                <!-- End Newsletter news -->
+
+
+            </div>
+            <div class="clearfix"></div>
+
+        </div>
+
+    </div>
+</section>
+@section Scripts {
+	<script>
+        function showCustomToast(message = "Thành công!", type = "success") {
+            const wrapper = document.getElementById('custom-toast');
+            const toast = wrapper.querySelector('.toast');
+            const text = document.getElementById('custom-toast-message');
+
+            text.textContent = message;
+            toast.className = `toast show text-white bg-${type}`;
+            wrapper.style.display = 'block';
+
+            setTimeout(hideCustomToast, 5000);
+        }
+
+		function hideCustomToast() {
+			document.getElementById('custom-toast').style.display = 'none';
+		}
+
+		// Copy dạng văn bản
+		function copyTextToClipboard(text) {
+			const temp = document.createElement("textarea");
+			temp.value = text;
+			temp.style.position = "fixed";
+			temp.style.opacity = "0";
+			document.body.appendChild(temp);
+			temp.select();
+			document.execCommand("copy");
+			document.body.removeChild(temp);
+		}
+
+		// Click xử lý toast + copy
+		document.addEventListener('DOMContentLoaded', () => {
+			document.querySelectorAll('.btn-toast').forEach(btn => {
+				btn.addEventListener('click', async () => {
+					const message = btn.getAttribute('data-noti') || "Thành công!";
+					const type = btn.getAttribute('data-type') || "success";
+					const copy = btn.getAttribute('data-copy');
+                    const download = btn.getAttribute('data-download');
+
+                    if (download) {
+                        const link = document.createElement('a');
+                        link.href = download;
+                        link.download = "";
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }
+
+					if (copy) {
+						copyTextToClipboard(copy);
+						showCustomToast(message, type);
+					} else {
+						showCustomToast(message, type);
+					}
+				});
+			});
+		});
+	</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const payBtn = document.querySelector(".btn-checkout");
+  const basePrice = parseFloat('@Model.Price') || 0;
+  const documentId = '@Model.Id';
+  const displayPrice = document.getElementById('calculated-price');
+  const qrImage = document.getElementById('qrPaymentImage');
+
+  const btnCreate = document.getElementById('btn-create-order');
+  const countdownBox = document.getElementById('countdown-box');
+  const countdownText = document.getElementById('countdown');
+  const btnCancel = document.getElementById('btn-cancel-order');
+
+  let selectedPercent = 100;
+  let countdownInterval;
+  let countdown = 15;
+
+  async function createPayment(percent) {
+    try {
+      const response = await fetch("/payment/create", {
+        method: "POST",
+        body: new URLSearchParams({
+          documentId: documentId,
+          percent: percent
+        })
+      });
+
+      const result = await response.json();
+        if (result.success) {
+          qrImage.src = result.qrCodeUrl;
+          qrImage.style.display = "block"; // Chỉ hiện khi có QR thật
+        } else {
+          alert("Không tạo được đơn thanh toán.");
+        }
+    } catch (err) {
+      console.error("❌ Exception:", err);
+    }
+  }
+
+  // Khi click nút mở modal
+  if (payBtn) {
+    payBtn.addEventListener("click", function () {
+      selectedPercent = 100;
+      const amount = Math.round(basePrice);
+      displayPrice.textContent = amount.toLocaleString('vi-VN');
+      qrImage.src = ""; // Clear QR
+      $('#payModal').modal('show');
+
+      // Reset UI
+      btnCreate.disabled = false;
+      countdownBox.style.display = "none";
+      clearInterval(countdownInterval);
+    });
+  }
+
+  // Khi chọn phần trăm khác
+  document.querySelectorAll('#percent-buttons label').forEach(label => {
+    label.addEventListener("click", function () {
+      const radio = this.querySelector('input[type="radio"]');
+      if (!radio) return;
+
+      selectedPercent = parseInt(radio.value);
+      const amount = Math.round(basePrice * selectedPercent / 100);
+      displayPrice.textContent = amount.toLocaleString('vi-VN');
+
+      // Cập nhật active button
+      document.querySelectorAll('#percent-buttons .btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      this.classList.add('active');
+
+      // Reset lại QR + countdown
+      qrImage.src = "";
+      btnCreate.disabled = false;
+      countdownBox.style.display = "none";
+      clearInterval(countdownInterval);
+    });
+  });
+
+  // Bấm "Tạo đơn thanh toán"
+  btnCreate.addEventListener("click", function () {
+    btnCreate.disabled = true;
+    countdown = 1;
+    countdownText.textContent = countdown;
+    countdownBox.style.display = "block";
+
+    countdownInterval = setInterval(() => {
+      countdown--;
+      countdownText.textContent = countdown;
+      if (countdown <= 0) {
+        clearInterval(countdownInterval);
+        countdownBox.style.display = "none";
+        createPayment(selectedPercent);
+      }
+    }, 1000);
+  });
+
+  // Huỷ tạo đơn
+  btnCancel.addEventListener("click", function () {
+    clearInterval(countdownInterval);
+    countdownBox.style.display = "none";
+    btnCreate.disabled = false;
+  });
+});
+</script>
+
+}
+<!-- Modal hiển thị QR thanh toán -->
+<div class="modal fade" id="payModal" tabindex="-1" role="dialog"
+     aria-labelledby="payModalLabel" aria-hidden="true"
+     data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content border-0 rounded-lg overflow-hidden">
+      <div class="modal-header d-flex align-items-center justify-content-between border-0 px-3 py-2">
+        <h5 class="modal-title font-weight-bold text-center m-0 w-100" id="payModalLabel" style="font-size: 1.25rem;">
+          Quét mã QR để thanh toán
+        </h5>
+        <button type="button" class="close m-0" data-dismiss="modal" aria-label="Đóng">
+          <span aria-hidden="true" style="font-size: 2rem; color: var(--primary);">×</span>
+        </button>
+      </div>
+
+      <div class="modal-body d-flex flex-column align-items-center justify-content-center px-4 pt-3 pb-4">
+
+        <!-- Chọn phần trăm -->
+        <div class="mb-3 w-100 text-center">
+            <p class="mb-2 font-weight-semibold" style="font-size: 1rem;">Chọn mức thanh toán trước:</p>
+            <div id="percent-buttons" class="btn-group btn-group-toggle" data-toggle="buttons">
+              <label class="btn btn-outline-primary px-3 py-1">
+                <input type="radio" name="paymentPercent" value="20" autocomplete="off"> 20%
+              </label>
+              <label class="btn btn-outline-primary px-3 py-1">
+                <input type="radio" name="paymentPercent" value="40" autocomplete="off"> 40%
+              </label>
+              <label class="btn btn-outline-primary px-3 py-1">
+                <input type="radio" name="paymentPercent" value="60" autocomplete="off"> 60%
+              </label>
+              <label class="btn btn-outline-primary px-3 py-1">
+                <input type="radio" name="paymentPercent" value="80" autocomplete="off"> 80%
+              </label>
+              <label class="btn btn-outline-primary px-3 py-1 active">
+                <input type="radio" name="paymentPercent" value="100" autocomplete="off" checked> 100%
+              </label>
+            </div>
+
+
+          <p class="mt-3 mb-1 font-weight-medium" style="font-size: 1rem;">
+            <strong>Thành tiền:</strong>
+            <span id="calculated-price" class="text-primary" style="font-weight: 600;">
+              @((Model.Price ?? 0).ToString("N0"))
+            </span> đ
+
+
+            <!-- Nút tạo đơn hàng và countdown -->
+            <div id="create-order-wrapper" class="text-center mt-3">
+              <button id="btn-create-order" class="btn btn-primary">Tạo đơn thanh toán</button>
+
+              <div id="countdown-box" class="mt-2" style="display: none;">
+                <p>Đơn hàng sẽ được tạo sau <span id="countdown">15</span> giây...</p>
+                <button id="btn-cancel-order" class="btn btn-sm btn-outline-primary">Huỷ</button>
+              </div>
+            </div>
+          </p>
+        </div>
+
+        <!-- QR -->
+        <img id="qrPaymentImage"
+             src=""
+             alt="QR thanh toán"
+             class="img-fluid mb-3" style="max-width: 260px; display: none;" />
+
+        <p class="text-muted text-center mb-0" style="font-size: 0.9rem;">
+          Vui lòng quét mã để thanh toán và chờ xác nhận tự động.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+

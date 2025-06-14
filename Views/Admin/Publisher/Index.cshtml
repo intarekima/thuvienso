@@ -1,0 +1,78 @@
+﻿@model List<thuvienso.Models.Publisher>
+@{
+    ViewData["Title"] = "Trang Danh Mục";
+    Layout = "~/Views/Shared/Admin/_Layout.cshtml";
+}
+@await Html.PartialAsync("~/Views/Shared/Admin/_Notification.cshtml")
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Danh Sách Tác Giả</h3></div>
+        </div>
+    </div>
+</div>
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <a href="/admin/publisher/create" class="card-title btn btn-primary text-white">
+                            <i class="bi bi-plus-lg"></i>
+                            Tạo mới
+                        </a>
+
+                        <form method="get" class="card-search">
+                            <div class="input-group input-group-sm">
+                                <input type="text" name="search" class="form-control" placeholder="Tìm kiếm..." value="@Context.Request.Query["search"]" />
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tên nhà xuất bản</th>
+                                    <th>Giới thiệu</th>
+                                    <th class="text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Id</td>
+                                            <td>@item.Name</td>
+                                            <td>@(string.IsNullOrWhiteSpace(item.Description) ? "-" : item.Description)</td>
+                                            <td class="text-center">
+                                                <a href="/admin/publisher/edit/@item.Id" class="btn btn-warning btn-sm">Chỉnh sửa</a>
+                                                <a href="/admin/publisher/delete/@item.Id" class="btn btn-danger btn-sm"
+                                                   onclick="return confirm('Bạn có chắc muốn xoá nhà xuất bản này không?');">Xoá</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">Không có nhà xuất bản nào.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Views/Shared/Admin/_Pagination.cshtml")

@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Trang Tạo Mới Danh Mục";
+    Layout = "~/Views/Shared/Admin/_Layout.cshtml";
+}
+@await Html.PartialAsync("~/Views/Shared/Admin/_Notification.cshtml")
+@model thuvienso.Models.Category
+
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Sửa Danh Mục</h3></div>
+        </div>
+    </div>
+</div>
+<div class="app-content">
+    <div class="container-fluid">
+
+        <form method="post" class="row">
+            <div class="col-12">
+                <div class="card card-primary">
+                    <div class="card-body">
+                        <div class="form-group mt-3">
+                            <label for="inputName">Tên danh mục</label>
+                            <input type="text" id="name" name="name"
+                                   value="@Model.Name"
+                                   class="form-control"
+                                   required
+                                   maxlength="255"
+                                   pattern=".*[A-Za-zÀ-ỹ].*"
+                                   title="Không được để trống hoặc chỉ gồm số." />
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="parentId">Danh mục cha</label>
+                            <select id="parentId" name="parentId" class="form-control select2">
+                                <option value="">-- Không chọn --</option>
+                                @foreach (var item in (IEnumerable<SelectListItem>)ViewBag.ParentCategories)
+                                {
+                                    <option value="@item.Value"
+                                            selected="@(item.Value == Model.ParentId?.ToString())">
+                                        @item.Text
+                                    </option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="description">Mô tả</label>
+                            <textarea id="description" name="description" class="form-control" maxlength="1000"
+                                      placeholder="Nhập mô tả danh mục (tuỳ chọn)">@Model.Description</textarea>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 mt-3 text-end">
+                <a href="/admin/category" class="btn btn-secondary">Huỷ</a>
+                <input type="submit" value="Lưu" class="btn btn-success">
+            </div>
+        </form>
+
+    </div>
+</div>

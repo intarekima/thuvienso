@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Đăng nhập";
+    Layout = "~/Views/Shared/User/_Layout.cshtml";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger container text-center">@TempData["Error"]</div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success container text-center">@TempData["Success"]</div>
+}
+
+<section class="wrap__section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="card mx-auto" style="max-width:520px;">
+                    <article class="card-body">
+                        <header class="mb-4">
+                            <h4 class="card-title">Đăng nhập</h4>
+                        </header>
+                        <form method="post" action="/user/auth/login">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Mật khẩu</label>
+                                <input class="form-control" name="password" type="password" required>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-block"> Gửi </button>
+                            </div> <!-- form-group// -->
+                            <div class="form-group text-center">
+                                Chưa có tài khoản <a href="/user/auth/register">
+                                    Đăng ký
+                                </a>
+                            </div>
+                            <div class="form-group text-center">
+                                Không nhớ mật khẩu <a href="/user/auth/forgot">
+                                    Quên mật khẩu
+                                </a>
+                            </div>
+                        </form>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

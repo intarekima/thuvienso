@@ -1,0 +1,51 @@
+# Build Folders
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# ASP.NET Specific
+wwwroot/uploads/
+wwwroot/temp/
+# wwwroot/documents/
+
+# Configuration secrets
+appsettings.Development.json
+secrets.json
+
+# Node modules (nếu có frontend dùng npm)
+node_modules/
+
+# Packages (nuget)
+*.nupkg
+*.snupkg
+packages/
+
+# Coverage / test results
+TestResults/
+*.coverage
+*.coveragexml
+
+# Others
+*.db
+*.sqlite
+*.pdb
+.vs/
+Migrations/

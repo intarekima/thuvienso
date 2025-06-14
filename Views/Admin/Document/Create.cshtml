@@ -1,0 +1,129 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@model List<thuvienso.Models.Document>
+
+@{
+    ViewData["Title"] = "Trang Tạo Mới Tài Liệu";
+    Layout = "~/Views/Shared/Admin/_Layout.cshtml";
+}
+
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Tạo Mới Tài Liệu</h3></div>
+        </div>
+    </div>
+</div>
+
+<div class="app-content">
+    <div class="container-fluid">
+
+        <form method="post" enctype="multipart/form-data" class="row">
+            <div class="col-12">
+                <div class="card card-primary">
+                    <div class="card-body">
+
+                        <div class="form-group mt-3">
+                            <label for="title">Tiêu đề</label>
+                            <input type="text" id="title" name="Title" class="form-control"
+                                   required maxlength="255" pattern=".*[A-Za-zÀ-ỹ].*"
+                                   placeholder="Không được để trống hoặc chỉ toàn số." />
+                            @if (!ViewData.ModelState.IsValid && ViewData.ModelState["Title"]?.Errors.Count > 0)
+                            {
+                                <div class="text-danger">@ViewData.ModelState["Title"].Errors[0].ErrorMessage</div>
+                            }
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="description">Mô tả</label>
+                            <textarea id="description" name="Description" class="form-control"
+                                      maxlength="1000" placeholder="Nhập mô tả tài liệu (tuỳ chọn)"></textarea>
+                            @if (!ViewData.ModelState.IsValid && ViewData.ModelState["Description"]?.Errors.Count > 0)
+                            {
+                                <div class="text-danger">@ViewData.ModelState["Description"].Errors[0].ErrorMessage</div>
+                            }
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="categoryId">Danh mục</label>
+                            <select id="categoryId" name="CategoryId" class="form-control select2" required>
+                                <option value="">-- Chọn danh mục --</option>
+                                @foreach (var item in (IEnumerable<SelectListItem>)ViewBag.Categories)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                            @if (!ViewData.ModelState.IsValid && ViewData.ModelState["CategoryId"]?.Errors.Count > 0)
+                            {
+                                <div class="text-danger">@ViewData.ModelState["CategoryId"].Errors[0].ErrorMessage</div>
+                            }
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="publisherId">Nhà xuất bản</label>
+                            <select id="publisherId" name="PublisherId" class="form-control select2" required>
+                                <option value="">-- Chọn nhà xuất bản --</option>
+                                @foreach (var item in (IEnumerable<SelectListItem>)ViewBag.Publishers)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                            @if (!ViewData.ModelState.IsValid && ViewData.ModelState["PublisherId"]?.Errors.Count > 0)
+                            {
+                                <div class="text-danger">@ViewData.ModelState["PublisherId"].Errors[0].ErrorMessage</div>
+                            }
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="authorIds">Tác giả</label>
+                            <select id="authorIds" name="authorIds" class="form-control select2" multiple="multiple" required>
+                                @foreach (var item in (IEnumerable<SelectListItem>)ViewBag.Authors)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                            @if (!ViewData.ModelState.IsValid && ViewData.ModelState["authorIds"]?.Errors.Count > 0)
+                            {
+                                <div class="text-danger">@ViewData.ModelState["authorIds"].Errors[0].ErrorMessage</div>
+                            }
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="file">Tài liệu PDF</label>
+                            <input type="file" id="file" name="file" class="form-control"
+                                   accept=".pdf" required />
+                            @if (!ViewData.ModelState.IsValid && ViewData.ModelState["file"]?.Errors.Count > 0)
+                            {
+                                <div class="text-danger">@ViewData.ModelState["file"].Errors[0].ErrorMessage</div>
+                            }
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="isFree">Loại tài liệu</label>
+                            <select id="isFree" name="isFree" class="form-control">
+                                <option selected value="true">Miễn phí</option>
+                                <option value="false">Có phí</option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group mt-3" id="priceInputWrapper" style="display: none">
+                            <label for="price">Giá tài liệu (VNĐ)(Tuỳ chọn)</label>
+                            <input type="number" id="price" name="price" class="form-control"
+                                   min="1000" step="1000"
+                                   placeholder="Nhập giá (VND)(Tuỳ chọn)"
+                                    />
+                            <small class="form-text text-muted">Chỉ nhập số, tối thiểu 1.000 VNĐ</small>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 mt-3 text-end">
+                <a href="/admin/document" class="btn btn-secondary">Huỷ</a>
+                <input type="submit" value="Lưu" class="btn btn-success" />
+            </div>
+        </form>
+
+    </div>
+</div>

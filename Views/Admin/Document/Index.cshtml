@@ -1,0 +1,166 @@
+﻿@model List<thuvienso.Models.Document>
+@{
+    ViewData["Title"] = "Trang Tài Liệu";
+    Layout = "~/Views/Shared/Admin/_Layout.cshtml";
+}
+
+@await Html.PartialAsync("~/Views/Shared/Admin/_Notification.cshtml")
+
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Danh Sách Tài Liệu</h3></div>
+        </div>
+    </div>
+</div>
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex flex-wrap">
+                        <a href="/admin/document/create" class="card-title btn btn-primary text-white">
+                            <i class="bi bi-plus-lg"></i>
+                            Tạo mới
+                        </a>
+
+                        <form method="get" class="card-search mb-2 mt-4" style="flex-basis: 100%">
+                            <!-- Dòng 1: Têna tài liệu + Danh mục + Nhà xuất bản + Tác giả -->
+                            <div class="row g-2 mb-2">
+                                <div class="col-2 flex-grow-1">
+                                    <input type="search" name="search" class="form-control" placeholder="Tên tài liệu"
+                                           value="@Context.Request.Query["search"]" />
+                                </div>
+
+                                <div class="col-2 flex-grow-1">
+                                    <select name="categoryId" class="form-control select2" data-placeholder="Chọn danh mục">
+                                        <option value="">-- Chọn danh mục --</option>
+                                        @foreach (var item in (IEnumerable<SelectListItem>)ViewBag.Categories)
+                                        {
+                                            var selected = (item.Value == Context.Request.Query["categoryId"]) ? true : false;
+                                            <option value="@item.Value" selected="@selected">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="col-2 flex-grow-1">
+                                    <select name="publisherId" class="form-control select2" data-placeholder="Chọn nhà xuất bản">
+                                        <option value="">-- Chọn nhà xuất bản --</option>
+                                        @foreach (var item in (IEnumerable<SelectListItem>)ViewBag.Publishers)
+                                        {
+                                            var selected = (item.Value == Context.Request.Query["publisherId"]) ? true : false;
+                                            <option value="@item.Value" selected="@selected">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="col-2 flex-grow-1">
+                                    <select name="authorIds" class="form-control select2" multiple size="3" data-placeholder="Chọn tác giả">
+                                        @foreach (var item in (IEnumerable<SelectListItem>)ViewBag.Authors)
+                                        {
+                                            var selected = Context.Request.Query["authorIds"].Contains(item.Value) ? true : false;
+                                            <option value="@item.Value" selected="@selected">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="col-2 flex-grow-1">
+                                    <select name="isFree" class="form-control" data-placeholder="Lọc theo loại tài liệu">
+                                        @{
+                                            var hasIsFree = Context.Request.Query.ContainsKey("isFree");
+                                            var isFreeQuery = Context.Request.Query["isFree"].ToString();
+                                        }
+                                        <option value="">Chọn loại tài liệu</option>
+                                        <option value="true" selected="@(hasIsFree && isFreeQuery == "true")">Miễn phí</option>
+                                        <option value="false" selected="@(hasIsFree && isFreeQuery == "false")">Có phí</option>
+                                    </select>
+
+                                </div>
+
+
+
+                                <div class="col-1">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead class="">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tiêu đề</th>
+                                    <th>Danh mục</th>
+                                    <th>Tác giả</th>
+                                    <th>Nhà xuất bản</th>
+                                    <th>File</th>
+                                    <th>Loại tài liệu</th>
+                                    <th>Giá</th>
+                                    <th class="text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Id</td>
+                                            <td>@item.Title</td>
+                                            <td>@item.Category?.Name</td>
+                                            <td>
+                                                @string.Join(", ", item.DocumentAuthors.Select(da => da.Author.Name))
+                                            </td>
+                                            <td>
+                                                @item.Publisher?.Name
+                                            </td>
+                                            <td>
+                                                <a href="@item.FileUrl" target="_blank" class="">
+                                                    Xem file
+                                                </a>
+                                            </td>
+                                            <td>
+                                                @(item.IsFree ? "Miễn phí" : "Có phí")
+                                            </td>
+                                            <td>
+                                                @if (!item.IsFree && item.Price.HasValue)
+                                                {
+                                                    @String.Format("{0:N0}đ", item.Price)
+                                                }
+                                                else
+                                                {
+                                                    @:0đ
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="/admin/document/edit/@item.Id" class="btn btn-warning btn-sm">Chỉnh sửa</a>
+                                                <a href="/admin/document/delete/@item.Id" class="btn btn-danger btn-sm"
+                                                   onclick="return confirm('Bạn có chắc muốn xoá tài liệu này không?');">Xoá</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">Không có tài liệu nào.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Views/Shared/Admin/_Pagination.cshtml")
+

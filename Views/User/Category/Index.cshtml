@@ -1,0 +1,137 @@
+﻿@model IEnumerable<thuvienso.Models.Document>
+
+@{
+    ViewData["Title"] = "Danh mục tài liệu";
+    Layout = "~/Views/Shared/User/_Layout.cshtml";
+    string fallbackThumb = "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/2b/d8/9e/2bd89e9f-aaf3-725a-bd45-ae6ecdee2f54/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg";
+
+}
+
+<!-- Wrapper -->
+<div class="container">
+    <!-- Bọc toàn bộ content bên trong -->
+    <div class="row">
+        <div class="col-12">
+
+            <!-- FORM FILTER -->
+            <form method="get" class="my-4">
+                <div class="row justify-content-between">
+                    <!-- Ô search -->
+                    <div class="col-md-2 pl-0">
+                        <input type="text" name="search" class="form-control" placeholder="Tên tài liệu" value="@Context.Request.Query["search"]" />
+                    </div>
+
+                    <!-- Danh mục -->
+                    <div class="col-md-2 pl-0">
+                        <select name="categoryId" class="form-control select2" data-placeholder="Chọn danh mục">
+                            <option value="">Chọn danh mục</option>
+                            @foreach (var cat in ViewBag.Categories as List<SelectListItem>)
+                            {
+                                <option value="@cat.Value" selected="@(cat.Value == Context.Request.Query["categoryId"] ? "selected" : null)">
+                                    @cat.Text
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- NXB -->
+                    <div class="col-md-2 pl-0">
+                        <select name="publisherId" class="form-control select2" data-placeholder="Nhà xuất bản">
+                            <option value="">Nhà xuất bản</option>
+                            @foreach (var pub in ViewBag.Publishers as List<SelectListItem>)
+                            {
+                                <option value="@pub.Value" selected="@(pub.Value == Context.Request.Query["publisherId"] ? "selected" : null)">
+                                    @pub.Text
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Tác giả -->
+                    <div class="col-md-2 pl-0">
+                        <select multiple name="authorId" class="form-control select2" data-placeholder="Tác giả">
+                            @foreach (var author in ViewBag.Authors as List<SelectListItem>)
+                            {
+                                <option value="@author.Value"
+                                        selected="@(author.Value == Context.Request.Query["authorId"] ? "selected" : null)">
+                                    @author.Text
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Sort -->
+                    <div class="col-md-2 pl-0">
+                        <select name="sort" class="form-control select2" data-placeholder="Sắp xếp">
+                            <option value="">Sắp xếp</option>
+                            <option value="newest" selected="@(Context.Request.Query["sort"] == "newest" ? "selected" : null)">Mới nhất</option>
+                            <option value="oldest" selected="@(Context.Request.Query["sort"] == "oldest" ? "selected" : null)">Cũ nhất</option>
+                            <option value="view_asc" selected="@(Context.Request.Query["sort"] == "view_asc" ? "selected" : null)">Xem nhiều</option>
+                            <option value="view_desc" selected="@(Context.Request.Query["sort"] == "view_desc" ? "selected" : null)">Tải nhiều</option>
+                        </select>
+                    </div>
+
+                    <!-- Button -->
+                    <div class="col-md-1 pl-0">
+                        <button type="submit" class="btn btn-danger">Lọc</button>
+                    </div>
+                </div>
+            </form>
+
+
+            <!-- Hiển thị danh sách tài liệu -->
+            <aside class="wrapper__list__article">
+                <h4 class="border_section">@ViewBag.CurrentCategoryName</h4>
+                <div class="row">
+                    @foreach (var doc in Model)
+                    {
+                        <div class="article__entry mb-3 col-md-4 col-lg-3">
+                            <div class="article__image">
+                                <a href="/document/@doc.Id">
+                                    <img src="@(string.IsNullOrEmpty(doc.Thumb) ? fallbackThumb : doc.Thumb)" alt="" class="img-fluid">
+                                </a>
+                            </div>
+                            <div class="article__content">
+                                <div class="article__category">
+                                    @doc.Category?.Name
+                                </div>
+                                <h5>
+                                    <a href="/document/@doc.Id">@doc.Title</a>
+                                </h5>
+                                <p class="desc text-truncate-2">@doc.Description</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </aside>
+
+        </div>
+    </div>
+</div>
+
+<!-- PAGINATION nằm ngoài -->
+<div class="pagination-area">
+    <div class="pagination wow fadeIn animated">
+        @{
+            int currentPage = (int)ViewBag.CurrentPage;
+            int totalPages = (int)ViewBag.TotalPages;
+            var originalQuery = Context.Request.Query.ToDictionary(k => k.Key, v => v.Value.ToString());
+
+            string BuildUrlWithPage(int page)
+            {
+                var query = new Dictionary<string, string>(originalQuery);
+                query["page"] = page.ToString();
+                var queryString = string.Join("&", query.Select(kv => $"{kv.Key}={kv.Value}"));
+                return $"?{queryString}";
+            }
+        }
+
+        <a href="@(BuildUrlWithPage(currentPage - 1))" class="@(currentPage == 1 ? "disabled" : "")">«</a>
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            <a href="@(BuildUrlWithPage(i))" class="@(i == currentPage ? "active" : "")">@i</a>
+        }
+        <a href="@(BuildUrlWithPage(currentPage + 1))" class="@(currentPage == totalPages ? "disabled" : "")">»</a>
+    </div>
+</div>
+

@@ -1,0 +1,20 @@
+﻿@model thuvienso.Helpers.CategoryHelper.CategoryTreeNode
+@{
+    var hasChild = Model.Children.Any();
+}
+
+<li class="@(hasChild ? "dropdown-submenu" : "")">
+    <a href="?categoryId=@Model.Category.Id" class="dropdown-item @(hasChild ? "icon-arrow" : "")">
+        @Model.Category.Name
+    </a>
+
+    @if (hasChild)
+    {
+        <ul class="submenu dropdown-menu animate fade-up">
+            @foreach (var child in Model.Children)
+            {
+                @Html.Partial("~/Views/Shared/User/Components/_CategoryMenuPartial.cshtml", child)
+            }
+        </ul>
+    }
+</li>

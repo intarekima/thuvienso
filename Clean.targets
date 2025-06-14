@@ -1,0 +1,5 @@
+<Project>
+  <Target Name="CustomCleanBeforeBuild" BeforeTargets="Build">
+    <RemoveDir Directories="$(BaseIntermediateOutputPath)" />
+  </Target>
+</Project>
